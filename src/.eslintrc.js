@@ -1,6 +1,6 @@
 module.exports = {
     root: true,
-    extends: ['scratch', 'scratch/es6'],
+    extends: ['boundlo', 'boundlo/es6'],
     env: {
         browser: true
     }

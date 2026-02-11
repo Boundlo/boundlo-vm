@@ -127,7 +127,7 @@ fs.readdirSync(executeDir)
             const project = readFileToBuffer(path.resolve(executeDir, uri));
 
             // Load the project and once all threads are complete ensure that
-            // the scratch project sent us a "end" message.
+            // the Boundlo! 1 Experience sent us a "end" message.
             return vm.loadProject(project)
                 .then(() => vm.greenFlag())
                 .then(() => whenThreadsComplete(t, vm, uri))

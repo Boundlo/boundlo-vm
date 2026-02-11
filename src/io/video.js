@@ -15,7 +15,7 @@ class Video {
         this.provider = null;
 
         /**
-         * Id representing a Scratch Renderer skin the video is rendered to for
+         * Id representing a Boundlo Renderer skin the video is rendered to for
          * previewing.
          * @type {number}
          */
@@ -68,7 +68,7 @@ class Video {
 
     /**
      * Set a video provider for this device. A default implementation of
-     * a video provider can be found in scratch-gui/src/lib/video/video-provider
+     * a video provider can be found in boundlo-gui/src/lib/video/video-provider
      * @param {VideoProvider} provider - Video provider to use
      */
     setProvider (provider) {

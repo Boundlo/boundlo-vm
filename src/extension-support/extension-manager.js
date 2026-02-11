@@ -11,19 +11,19 @@ const BlockType = require('./block-type');
 const builtinExtensions = {
     // This is an example that isn't loaded with the other core blocks,
     // but serves as a reference for loading core blocks as extensions.
-    coreExample: () => require('../blocks/scratch3_core_example'),
+    coreExample: () => require('../blocks/boundlo1_core_example'),
     // These are the non-core built-in extensions.
-    pen: () => require('../extensions/scratch3_pen'),
-    wedo2: () => require('../extensions/scratch3_wedo2'),
-    music: () => require('../extensions/scratch3_music'),
-    microbit: () => require('../extensions/scratch3_microbit'),
-    text2speech: () => require('../extensions/scratch3_text2speech'),
-    translate: () => require('../extensions/scratch3_translate'),
-    videoSensing: () => require('../extensions/scratch3_video_sensing'),
-    ev3: () => require('../extensions/scratch3_ev3'),
-    makeymakey: () => require('../extensions/scratch3_makeymakey'),
-    boost: () => require('../extensions/scratch3_boost'),
-    gdxfor: () => require('../extensions/scratch3_gdx_for')
+    pen: () => require('../extensions/boundlo1_pen'),
+    wedo2: () => require('../extensions/boundlo1_wedo2'),
+    music: () => require('../extensions/boundlo1_music'),
+    microbit: () => require('../extensions/boundlo1_microbit'),
+    text2speech: () => require('../extensions/boundlo1_text2speech'),
+    translate: () => require('../extensions/boundlo1_translate'),
+    videoSensing: () => require('../extensions/boundlo1_video_sensing'),
+    ev3: () => require('../extensions/boundlo1_ev3'),
+    makeymakey: () => require('../extensions/boundlo1_makeymakey'),
+    boost: () => require('../extensions/boundlo1_boost'),
+    gdxfor: () => require('../extensions/boundlo1_gdx_for')
 };
 
 /**
@@ -325,7 +325,7 @@ class ExtensionManager {
             if (typeof menuInfo.items === 'string') {
                 const menuItemFunctionName = menuInfo.items;
                 const serviceObject = dispatch.services[serviceName];
-                // Bind the function here so we can pass a simple item generation function to Scratch Blocks later.
+                // Bind the function here so we can pass a simple item generation function to Boundlo Blocks later.
                 menuInfo.items = this._getExtensionMenuItems.bind(this, serviceObject, menuItemFunctionName);
             }
         }

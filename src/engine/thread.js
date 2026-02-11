@@ -1,3 +1,5 @@
+const Sequencer = require("./sequencer");
+
 /**
  * Recycle bin for empty stackFrame objects
  * @type Array<_StackFrame>
@@ -123,12 +125,14 @@ class _StackFrame {
  * @constructor
  */
 class Thread {
-    constructor (firstBlock) {
+    constructor (firstBlock, runtime) {
         /**
          * ID of top block of the thread
          * @type {!string}
          */
         this.topBlock = firstBlock;
+
+        this.runtime = runtime
 
         /**
          * Stack for the thread. When the sequencer enters a control structure,
@@ -233,7 +237,7 @@ class Thread {
     static get STATUS_DONE () {
         return 4;
     }
-
+    
     /**
      * Push stack and update stack frames appropriately.
      * @param {string} blockId Block ID to push to stack.
@@ -346,6 +350,10 @@ class Thread {
      * Get a parameter at the lowest possible level of the stack.
      * @param {!string} paramName Name of parameter.
      * @return {*} value Value for parameter.
+    /**
+     * Get a parameter at the lowest possible level of the stack.
+     * @param {!string} paramName Name of parameter.
+     * @return {*} value Value for parameter.
      */
     getParam (paramName) {
         for (let i = this.stackFrames.length - 1; i >= 0; i--) {
@@ -379,7 +387,7 @@ class Thread {
         const nextBlockId = this.target.blocks.getNextBlock(this.peekStack());
         this.reuseStackForNextBlock(nextBlockId);
     }
-
+    
     /**
      * Attempt to determine whether a procedure call is recursive,
      * by examining the stack.

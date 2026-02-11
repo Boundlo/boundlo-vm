@@ -24,7 +24,7 @@ const {loadSound} = require('./import/load-sound.js');
 const {serializeSounds, serializeCostumes} = require('./serialization/serialize-assets');
 require('canvas-toBlob');
 
-const RESERVED_NAMES = ['_mouse_', '_stage_', '_edge_', '_myself_', '_random_'];
+const RESERVED_NAMES = ['_mouse_', '_stage_', '_edge_', '_myself_', '_random_', '_original_', '_clone_'];
 
 const CORE_EXTENSIONS = [
     // 'motion',
@@ -300,7 +300,7 @@ class VirtualMachine extends EventEmitter {
     }
 
     /**
-     * Load a Scratch project from a .sb, .sb2, .sb3 or json string.
+     * Load a Boundlo! 1 Experience from a .sb, .sb2, .sb3 or json string.
      * @param {string | object} input A json string, object, or ArrayBuffer representing the project to load.
      * @return {!Promise} Promise that resolves after targets are installed.
      */
@@ -399,7 +399,7 @@ class VirtualMachine extends EventEmitter {
 
         return zip.generateAsync({
             type: 'blob',
-            mimeType: 'application/x.scratch.sb3',
+            mimeType: 'application/x.boundlo.bnd1exp',
             compression: 'DEFLATE',
             compressionOptions: {
                 level: 6 // Tradeoff between best speed (1) and best compression (9)
@@ -448,7 +448,7 @@ class VirtualMachine extends EventEmitter {
 
         return zip.generateAsync({
             type: typeof optZipType === 'string' ? optZipType : 'blob',
-            mimeType: 'application/x.scratch.sprite3',
+            mimeType: 'application/x.boundlo.bnd1obj',
             compression: 'DEFLATE',
             compressionOptions: {
                 level: 6
@@ -504,7 +504,7 @@ class VirtualMachine extends EventEmitter {
             }
             // TODO: reject with an Error (possible breaking API change!)
             // eslint-disable-next-line prefer-promise-reject-errors
-            return Promise.reject('Unable to verify Scratch Project version.');
+            return Promise.reject('Unable to verify Boundlo! 1 Experience version.');
         };
         return deserializePromise()
             .then(({targets, extensions}) => {

@@ -490,7 +490,7 @@ window.upload = function (_this) {
 window.download = function (_this) {
     const blob = new Blob([JSON.stringify({
         meta: {
-            source: 'Scratch VM Benchmark Suite',
+            source: 'Boundlo VM Benchmark Suite',
             version: 1
         },
         results: Object.values(suiteView.views)
@@ -521,7 +521,7 @@ window.onload = function () {
     add(130041250, 0, 2000); // floating blocks
     add(130041250, 4000, 6000);
 
-    add(14844969, 0, 2000); // scratch cats
+    add(14844969, 0, 2000); // boundlo cats
     add(14844969, 1000, 6000);
 
     standard(173918262); // bouncy heros

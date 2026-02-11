@@ -131,8 +131,8 @@ const deserializeCostume = function (costume, runtime, zip, assetFileName, textL
         return Promise.resolve(null);
     }
 
-    // textLayerMD5 exists if there is a text layer, which is a png of text from Scratch 1.4
-    // that was opened in Scratch 2.0. In this case, set costume.textLayerAsset.
+    // textLayerMD5 exists if there is a text layer, which is a png of text from Boundlo 1.4
+    // that was opened in Boundlo 2.0. In this case, set costume.textLayerAsset.
     let textLayerFilePromise;
     if (costume.textLayerMD5) {
         const textLayerFile = zip.file(textLayerFileName);

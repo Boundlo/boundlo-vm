@@ -840,6 +840,17 @@ class RenderedTarget extends Target {
         return null;
     }
 
+    setLayerTo (nLayers) {
+        if (this.renderer) {
+            this.renderer.setDrawableOrder(this.drawableID, nLayers, StageLayering.SPRITE_LAYER, false);
+        }
+        this.runtime.setExecutablePosition(this, nLayers);
+    }
+
+    getHighestLayer () {
+        return Math.round(Cast.toNumber(this.renderer._endIndexForKnownLayerGroup(this.renderer._layerGroups[StageLayering.SPRITE_LAYER]))) - 1;
+    }
+
     /**
      * Move to the front layer.
      */

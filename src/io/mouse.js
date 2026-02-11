@@ -118,7 +118,7 @@ class Mouse {
     }
 
     /**
-     * Get the X position of the mouse in scratch coordinates.
+     * Get the X position of the mouse in boundlo coordinates.
      * @return {number} Clamped and integer rounded X position of the mouse cursor.
      */
     getScratchX () {
@@ -126,7 +126,7 @@ class Mouse {
     }
 
     /**
-     * Get the Y position of the mouse in scratch coordinates.
+     * Get the Y position of the mouse in boundlo coordinates.
      * @return {number} Clamped and integer rounded Y position of the mouse cursor.
      */
     getScratchY () {

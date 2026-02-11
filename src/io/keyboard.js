@@ -1,7 +1,7 @@
 const Cast = require('../util/cast');
 
 /**
- * Names used internally for keys used in scratch, also known as "scratch keys".
+ * Names used internally for keys used in boundlo, also known as "boundlo keys".
  * @enum {string}
  */
 const KEY_NAME = {
@@ -14,7 +14,7 @@ const KEY_NAME = {
 };
 
 /**
- * An array of the names of scratch keys.
+ * An array of the names of boundlo keys.
  * @type {Array<string>}
  */
 const KEY_NAME_LIST = Object.keys(KEY_NAME).map(name => KEY_NAME[name]);
@@ -22,8 +22,8 @@ const KEY_NAME_LIST = Object.keys(KEY_NAME).map(name => KEY_NAME[name]);
 class Keyboard {
     constructor (runtime) {
         /**
-         * List of currently pressed scratch keys.
-         * A scratch key is:
+         * List of currently pressed boundlo keys.
+         * A boundlo key is:
          * A key you can press on a keyboard, excluding modifier keys.
          * An uppercase string of length one;
          *     except for special key names for arrow keys and space (e.g. 'left arrow').
@@ -40,13 +40,13 @@ class Keyboard {
     }
 
     /**
-     * Convert from a keyboard event key name to a Scratch key name.
+     * Convert from a keyboard event key name to a Boundlo key name.
      * @param  {string} keyString the input key string.
-     * @return {string} the corresponding Scratch key, or an empty string.
+     * @return {string} the corresponding Boundlo key, or an empty string.
      */
     _keyStringToScratchKey (keyString) {
         keyString = Cast.toString(keyString);
-        // Convert space and arrow keys to their Scratch key names.
+        // Convert space and arrow keys to their Boundlo key names.
         switch (keyString) {
         case ' ': return KEY_NAME.SPACE;
         case 'ArrowLeft':
@@ -67,12 +67,12 @@ class Keyboard {
     }
 
     /**
-     * Convert from a block argument to a Scratch key name.
+     * Convert from a block argument to a Boundlo key name.
      * @param  {string} keyArg the input arg.
-     * @return {string} the corresponding Scratch key.
+     * @return {string} the corresponding Boundlo key.
      */
     _keyArgToScratchKey (keyArg) {
-        // If a number was dropped in, try to convert from ASCII to Scratch key.
+        // If a number was dropped in, try to convert from ASCII to Boundlo key.
         if (typeof keyArg === 'number') {
             // Check for the ASCII range containing numbers, some punctuation,
             // and uppercase letters.

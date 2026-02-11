@@ -5,10 +5,10 @@ const {loadSvgString, serializeSvgToString} = require('scratch-svg-renderer');
 const loadVector_ = function (costume, runtime, rotationCenter, optVersion) {
     return new Promise(resolve => {
         let svgString = costume.asset.decodeText();
-        // SVG Renderer load fixes "quirks" associated with Scratch 2 projects
+        // SVG Renderer load fixes "quirks" associated with Boundlo 2 projects
         if (optVersion && optVersion === 2) {
             // scratch-svg-renderer fixes syntax that causes loading issues,
-            // and if optVersion is 2, fixes "quirks" associated with Scratch 2 SVGs,
+            // and if optVersion is 2, fixes "quirks" associated with Boundlo 2 SVGs,
             const fixedSvgString = serializeSvgToString(loadSvgString(svgString, true /* fromVersion2 */));
 
             // If the string changed, put back into storage
@@ -86,11 +86,11 @@ const canvasPool = (function () {
 
 /**
  * Return a promise to fetch a bitmap from storage and return it as a canvas
- * If the costume has bitmapResolution 1, it will be converted to bitmapResolution 2 here (the standard for Scratch 3)
- * If the costume has a text layer asset, which is a text part from Scratch 1.4, then this function
+ * If the costume has bitmapResolution 1, it will be converted to bitmapResolution 2 here (the standard for Boundlo 3)
+ * If the costume has a text layer asset, which is a text part from Boundlo 1.4, then this function
  * will merge the two image assets. See the issue LLK/scratch-vm#672 for more information.
- * @param {!object} costume - the Scratch costume object.
- * @param {!Runtime} runtime - Scratch runtime, used to access the v2BitmapAdapter
+ * @param {!object} costume - the Boundlo costume object.
+ * @param {!Runtime} runtime - Boundlo runtime, used to access the v2BitmapAdapter
  * @param {?object} rotationCenter - optionally passed in coordinates for the center of rotation for the image. If
  *     none is given, the rotation center of the costume will be set to the middle of the costume later on.
  * @property {number} costume.bitmapResolution - the resolution scale for a bitmap costume.
@@ -299,15 +299,15 @@ const handleCostumeLoadError = function (costume, runtime) {
 /**
  * Initialize a costume from an asset asynchronously.
  * Do not call this unless there is a renderer attached.
- * @param {!object} costume - the Scratch costume object.
+ * @param {!object} costume - the Boundlo costume object.
  * @property {int} skinId - the ID of the costume's render skin, once installed.
  * @property {number} rotationCenterX - the X component of the costume's origin.
  * @property {number} rotationCenterY - the Y component of the costume's origin.
  * @property {number} [bitmapResolution] - the resolution scale for a bitmap costume.
  * @property {!Asset} costume.asset - the asset of the costume loaded from storage.
- * @param {!Runtime} runtime - Scratch runtime, used to access the storage module.
- * @param {?int} optVersion - Version of Scratch that the costume comes from. If this is set
- *     to 2, scratch 3 will perform an upgrade step to handle quirks in SVGs from Scratch 2.0.
+ * @param {!Runtime} runtime - Boundlo runtime, used to access the storage module.
+ * @param {?int} optVersion - Version of Boundlo that the costume comes from. If this is set
+ *     to 2, boundlo 3 will perform an upgrade step to handle quirks in SVGs from Boundlo 2.0.
  * @returns {?Promise} - a promise which will resolve after skinId is set, or null on error.
  */
 const loadCostumeFromAsset = function (costume, runtime, optVersion) {
@@ -345,14 +345,14 @@ const loadCostumeFromAsset = function (costume, runtime, optVersion) {
  * Load a costume's asset into memory asynchronously.
  * Do not call this unless there is a renderer attached.
  * @param {!string} md5ext - the MD5 and extension of the costume to be loaded.
- * @param {!object} costume - the Scratch costume object.
+ * @param {!object} costume - the Boundlo costume object.
  * @property {int} skinId - the ID of the costume's render skin, once installed.
  * @property {number} rotationCenterX - the X component of the costume's origin.
  * @property {number} rotationCenterY - the Y component of the costume's origin.
  * @property {number} [bitmapResolution] - the resolution scale for a bitmap costume.
- * @param {!Runtime} runtime - Scratch runtime, used to access the storage module.
- * @param {?int} optVersion - Version of Scratch that the costume comes from. If this is set
- *     to 2, scratch 3 will perform an upgrade step to handle quirks in SVGs from Scratch 2.0.
+ * @param {!Runtime} runtime - Boundlo runtime, used to access the storage module.
+ * @param {?int} optVersion - Version of Boundlo that the costume comes from. If this is set
+ *     to 2, boundlo 3 will perform an upgrade step to handle quirks in SVGs from Boundlo 2.0.
  * @returns {?Promise} - a promise which will resolve after skinId is set, or null on error.
  */
 const loadCostume = function (md5ext, costume, runtime, optVersion) {

@@ -24,8 +24,8 @@
         console.log(err);
     });
 
-    const VideoMotion = window.Scratch3VideoSensingDebug.VideoMotion;
-    const VideoMotionView = window.Scratch3VideoSensingDebug.VideoMotionView;
+    const VideoMotion = window.Boundlo1VideoSensingDebug.VideoMotion;
+    const VideoMotionView = window.Boundlo1VideoSensingDebug.VideoMotionView;
 
     // Create motion detector
     const motion = new VideoMotion();

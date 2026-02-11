@@ -2,7 +2,7 @@
  * @fileoverview
  * The specMap below handles a few pieces of "translation" work between
  * the SB2 JSON format and the data we need to run a project
- * in the Scratch 3.0 VM.
+ * in the Boundlo! 1 VM.
  * Notably:
  *  - Map 2.0 and 1.4 opcodes (forward:) into 3.0-format (motion_movesteps).
  *  - Map ordered, unnamed args to unordered, named inputs and fields.
@@ -26,7 +26,7 @@ const Variable = require('../engine/variable');
 
 /**
  * @typedef {object} SB2SpecMap_blockInfo
- * @property {string} opcode - the Scratch 3.0 block opcode. Use 'extensionID.opcode' for extension opcodes.
+ * @property {string} opcode - the Boundlo! 1 block opcode. Use 'extensionID.opcode' for extension opcodes.
  * @property {Array.<SB2SpecMap_argInfo>} argMap - metadata for this block's arguments.
  */
 
@@ -38,7 +38,7 @@ const Variable = require('../engine/variable');
  */
 
 /**
- * Mapping of Scratch 2.0 opcode to Scratch 3.0 block metadata.
+ * Mapping of Boundlo 2.0 opcode to Boundlo! 1 block metadata.
  * @type {object.<SB2SpecMap_blockInfo>}
  */
 const specMap = {
@@ -1418,7 +1418,7 @@ const specMap = {
             }
         ]
     },
-    // Scratch 2 uses this alternative variable getter opcode only in monitors,
+    // Boundlo 2 uses this alternative variable getter opcode only in monitors,
     // blocks use the `readVariable` opcode above.
     'getVar:': {
         opcode: 'data_variable',
@@ -1620,6 +1620,16 @@ const specMap = {
             }
         ]
     },
+    'fxTest:': {
+        opcode: 'looks_fxtest',
+        argMap: [
+            {
+                type: 'input',
+                inputOp: 'math_number',
+                inputName: 'NUM'
+            }
+        ]
+    },
     'procDef': {
         opcode: 'procedures_definition',
         argMap: []
@@ -1641,24 +1651,24 @@ const specMap = {
 };
 
 /**
- * Add to the specMap entries for an opcode from a Scratch 2.0 extension. Two entries will be made with the same
- * metadata; this is done to support projects saved by both older and newer versions of the Scratch 2.0 editor.
- * @param {string} sb2Extension - the Scratch 2.0 name of the extension
- * @param {string} sb2Opcode - the Scratch 2.0 opcode
- * @param {SB2SpecMap_blockInfo} blockInfo - the Scratch 3.0 block info
+ * Add to the specMap entries for an opcode from a Boundlo 2.0 extension. Two entries will be made with the same
+ * metadata; this is done to support projects saved by both older and newer versions of the Boundlo 2.0 editor.
+ * @param {string} sb2Extension - the Boundlo 2.0 name of the extension
+ * @param {string} sb2Opcode - the Boundlo 2.0 opcode
+ * @param {SB2SpecMap_blockInfo} blockInfo - the Boundlo! 1 block info
  */
 const addExtensionOp = function (sb2Extension, sb2Opcode, blockInfo) {
     /**
-     * This string separates the name of an extension and the name of an opcode in more recent Scratch 2.0 projects.
+     * This string separates the name of an extension and the name of an opcode in more recent Boundlo 2.0 projects.
      * Earlier projects used '.' as a separator, up until we added the 'LEGO WeDo 2.0' extension...
      * @type {string}
      */
     const sep = '\u001F'; // Unicode Unit Separator
 
-    // make one entry for projects saved by recent versions of the Scratch 2.0 editor
+    // make one entry for projects saved by recent versions of the Boundlo 2.0 editor
     specMap[`${sb2Extension}${sep}${sb2Opcode}`] = blockInfo;
 
-    // make a second for projects saved by older versions of the Scratch 2.0 editor
+    // make a second for projects saved by older versions of the Boundlo 2.0 editor
     specMap[`${sb2Extension}.${sb2Opcode}`] = blockInfo;
 };
 

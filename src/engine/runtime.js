@@ -19,6 +19,7 @@ const Variable = require('./variable');
 const xmlEscape = require('../util/xml-escape');
 const ScratchLinkWebSocket = require('../util/scratch-link-websocket');
 const fetchWithTimeout = require('../util/fetch-with-timeout');
+const Cast = require('../util/cast');
 
 // Virtual I/O devices.
 const Clock = require('../io/clock');
@@ -31,17 +32,20 @@ const Video = require('../io/video');
 
 const StringUtil = require('../util/string-util');
 const uid = require('../util/uid');
+const { default: vmListenerHOC } = require('../../../boundlo-gui/src/lib/vm-listener-hoc.jsx');
+const { vmStatusInitialState } = require('../../../boundlo-gui/src/reducers/vm-status.js');
+const { default: vmManagerHOC } = require('../../../boundlo-gui/src/lib/vm-manager-hoc.jsx');
 
 const defaultBlockPackages = {
-    scratch3_control: require('../blocks/scratch3_control'),
-    scratch3_event: require('../blocks/scratch3_event'),
-    scratch3_looks: require('../blocks/scratch3_looks'),
-    scratch3_motion: require('../blocks/scratch3_motion'),
-    scratch3_operators: require('../blocks/scratch3_operators'),
-    scratch3_sound: require('../blocks/scratch3_sound'),
-    scratch3_sensing: require('../blocks/scratch3_sensing'),
-    scratch3_data: require('../blocks/scratch3_data'),
-    scratch3_procedures: require('../blocks/scratch3_procedures')
+    boundlo1_control: require('../blocks/boundlo1_control'),
+    boundlo1_event: require('../blocks/boundlo1_event'),
+    boundlo1_looks: require('../blocks/boundlo1_looks'),
+    boundlo1_motion: require('../blocks/boundlo1_motion'),
+    boundlo1_operators: require('../blocks/boundlo1_operators'),
+    boundlo1_sound: require('../blocks/boundlo1_sound'),
+    boundlo1_sensing: require('../blocks/boundlo1_sensing'),
+    boundlo1_data: require('../blocks/boundlo1_data'),
+    boundlo1_procedures: require('../blocks/boundlo1_procedures')
 };
 
 const defaultExtensionColors = ['#0FBD8C', '#0DA57A', '#0B8E69'];
@@ -488,6 +492,7 @@ class Runtime extends EventEmitter {
      * @const {string}
      */
     static get PROJECT_START () {
+        this._cloneCounter = 0;
         return 'PROJECT_START';
     }
 
@@ -992,6 +997,19 @@ class Runtime extends EventEmitter {
                 });
             }
         }
+    }
+
+    /**
+     * Errors Boundlo with a user error.
+     * @param {string} errMessage - The provided errorMessage.
+     * @returns {string} - The provided errorMessage to be put in a return.
+     * @private
+     */
+    _BoundloUserError (errMessage) {
+        this.stopAll();
+        const e = Cast.toString(errMessage);
+        window.alert(e);
+        return e;
     }
 
     /**
@@ -2228,28 +2246,11 @@ class Runtime extends EventEmitter {
         );
     }
 
-    /**
-     * Start all threads that start with the green flag.
-     */
-    greenFlag () {
-        this.stopAll();
-        this.emit(Runtime.PROJECT_START);
-        this.ioDevices.clock.resetProjectTimer();
-        this.targets.forEach(target => target.clearEdgeActivatedValues());
-        // Inform all targets of the green flag.
-        for (let i = 0; i < this.targets.length; i++) {
-            this.targets[i].onGreenFlag();
-        }
-        this.startHats('event_whenflagclicked');
-    }
 
     /**
-     * Stop "everything."
+     * Stops everything.
      */
-    stopAll () {
-        // Emit stop event to allow blocks to clean up any state.
-        this.emit(Runtime.PROJECT_STOP_ALL);
-
+    stopEverything () {
         // Dispose all clones.
         const newTargets = [];
         for (let i = 0; i < this.targets.length; i++) {
@@ -2273,8 +2274,45 @@ class Runtime extends EventEmitter {
         }
         // Remove all remaining threads from executing in the next tick.
         this.threads = [];
-
         this.resetRunId();
+    }
+
+    /**
+     * Sets the turbo mode. (ported from virtualmachine.js)
+     */
+    setTurboMode (turboModeOn) {
+        this.turboMode = !!turboModeOn;
+        if (this.turboMode) {
+            this.emit(Runtime.TURBO_MODE_ON);
+        } else {
+            this.emit(Runtime.TURBO_MODE_OFF);
+        }
+    }
+
+    /**
+     * Start all threads that start with the green flag.
+     */
+    greenFlag () {
+        this._cloneCounter = 0;
+        this.stopEverything();
+        this.emit(Runtime.PROJECT_START);
+        this.ioDevices.clock.resetProjectTimer();
+        this.targets.forEach(target => target.clearEdgeActivatedValues());
+        // Inform all targets of the green flag.
+        for (let i = 0; i < this.targets.length; i++) {
+            this.targets[i].onGreenFlag();
+        }
+        this.startHats('event_whenflagclicked');
+    }
+
+    /**
+     * Stop "everything."
+     */
+    stopAll () {
+        this.emit(Runtime.PROJECT_STOP_ALL);
+        this._cloneCounter = 0;
+        this.stopEverything()
+        this.startHats('event_whenstopclicked');
     }
 
     /**

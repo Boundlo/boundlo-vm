@@ -108,6 +108,23 @@ class BlockUtility {
         this.thread.status = Thread.STATUS_YIELD;
     }
 
+    wait (secs) {
+        const csecs = Cast.toNumber(secs) * 1000
+        setTimeout (function() {
+            return;
+        }, csecs)
+        return;
+    }
+
+    waitUntil (cond) {
+        while (!cond) {
+            window.setTimeout (function() {
+                return;
+            }, 100)
+        }
+        return;
+    }
+
     /**
      * Set the thread to yield until the next tick of the runtime.
      */

@@ -3,25 +3,25 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Scratch VM Benchmark</title>
+    <title>Boundlo VM Benchmark</title>
     <link rel="stylesheet" href="./benchmark.css" type="text/css" media="screen">
     <script>
         // Track loading time with timestamps and if possible the performance
         // api.
 
-        // Start tracking loading of Scratch before the body dom is evaluated.
+        // Start tracking loading of Boundlo before the body dom is evaluated.
         window.ScratchVMLoadStart = Date.now();
         if (window.performance) {
             // Mark for browser performance inspectors and if we want to use
             // other performance apis.
-            performance.mark('Scratch.LoadStart');
+            performance.mark('Boundlo.LoadStart');
         }
     </script>
 </head>
 <body>
-  <h2>Scratch VM Benchmark</h2>
+  <h2>Boundlo VM Benchmark</h2>
   <p class="description">
-    Welcome to the scratch-vm benchmark. This tool helps you profile a scratch
+    Welcome to the scratch-vm benchmark. This tool helps you profile a boundlo
     project. When you load the page, it:
     <ol class="description">
       <li>loads the default project and enables turbo mode

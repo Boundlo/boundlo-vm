@@ -45,10 +45,10 @@ const WORKSPACE_X_SCALE = 1.5;
 const WORKSPACE_Y_SCALE = 2.2;
 
 /**
- * Convert a Scratch 2.0 procedure string (e.g., "my_procedure %s %b %n")
+ * Convert a Boundlo 2.0 procedure string (e.g., "my_procedure %s %b %n")
  * into an argument map. This allows us to provide the expected inputs
  * to a mutated procedure call.
- * @param {string} procCode Scratch 2.0 procedure string.
+ * @param {string} procCode Boundlo 2.0 procedure string.
  * @return {object} Argument map compatible with those in sb2specmap.
  */
 const parseProcedureArgMap = function (procCode) {
@@ -126,7 +126,7 @@ const flatten = function (blocks) {
  * which block they should attach to.
  * @param {int} commentIndex The current index of the top block in this list if it were in a flattened
  * list of all blocks for the target
- * @return {Array<Array.<object>|int>} Tuple where first item is the Scratch VM-format block list, and
+ * @return {Array<Array.<object>|int>} Tuple where first item is the Boundlo VM-format block list, and
  * second item is the updated comment index
  */
 const parseBlockList = function (blockList, addBroadcastMsg, getVariableId, extensions, parseState, comments,
@@ -154,7 +154,7 @@ const parseBlockList = function (blockList, addBroadcastMsg, getVariableId, exte
 };
 
 /**
- * Parse a Scratch object's scripts into VM blocks.
+ * Parse a Boundlo object's scripts into VM blocks.
  * This should only handle top-level scripts that include X, Y coordinates.
  * @param {!object} scripts Scripts object from SB2 JSON.
  * @param {!Blocks} blocks Blocks object to load parsed blocks into.
@@ -264,9 +264,9 @@ const parseMonitorObject = (object, runtime, targets, extensions) => {
         log.warn(`Could not find monitor block with opcode: ${object.cmd}`);
         return;
     }
-    // In scratch 2.0, there are two monitors that now correspond to extension
+    // In boundlo 2.0, there are two monitors that now correspond to extension
     // blocks (tempo and video motion/direction). In the case of the
-    // video motion/direction block, this reporter is not monitorable in Scratch 3.0.
+    // video motion/direction block, this reporter is not monitorable in Boundlo! 1.
     // In the case of the tempo block, we should import it and load the music extension
     // only when the monitor is actually visible.
 
@@ -310,7 +310,7 @@ const parseMonitorObject = (object, runtime, targets, extensions) => {
     const getVariableId = generateVariableIdGetter(target.id, false);
     // eslint-disable-next-line no-use-before-define
     const [block, _] = parseBlock(
-        [object.cmd, object.param], // Scratch 2 monitor blocks only have one param.
+        [object.cmd, object.param], // Boundlo 2 monitor blocks only have one param.
         null, // `addBroadcastMsg`, not needed for monitor blocks.
         getVariableId,
         extensions,
@@ -391,11 +391,11 @@ const parseMonitorObject = (object, runtime, targets, extensions) => {
 };
 
 /**
- * Parse the assets of a single "Scratch object" and load them. This
+ * Parse the assets of a single "Boundlo object" and load them. This
  * preprocesses objects to support loading the data for those assets over a
  * network while the objects are further processed into Blocks, Sprites, and a
  * list of needed Extensions.
- * @param {!object} object - From-JSON "Scratch object:" sprite, stage, watcher.
+ * @param {!object} object - From-JSON "Boundlo object:" sprite, stage, watcher.
  * @param {!Runtime} runtime - Runtime object to load all structures into.
  * @param {boolean} topLevel - Whether this is the top-level object (stage).
  * @param {?object} zip - Optional zipped assets for local file import
@@ -511,14 +511,14 @@ const parseScratchAssets = function (object, runtime, topLevel, zip) {
 };
 
 /**
- * Parse a single "Scratch object" and create all its in-memory VM objects.
+ * Parse a single "Boundlo object" and create all its in-memory VM objects.
  * TODO: parse the "info" section, especially "savedExtensions"
- * @param {!object} object - From-JSON "Scratch object:" sprite, stage, watcher.
+ * @param {!object} object - From-JSON "Boundlo object:" sprite, stage, watcher.
  * @param {!Runtime} runtime - Runtime object to load all structures into.
  * @param {ImportedExtensionsInfo} extensions - (in/out) parsed extension information will be stored here.
  * @param {boolean} topLevel - Whether this is the top-level object (stage).
  * @param {?object} zip - Optional zipped assets for local file import
- * @param {object} assets - Promises for assets of this scratch object grouped
+ * @param {object} assets - Promises for assets of this boundlo object grouped
  *   into costumes and sounds
  * @return {!Promise.<Array.<Target>>} Promise for the loaded targets when ready, or null for unsupported objects.
  */
@@ -537,7 +537,7 @@ const parseScratchObject = function (object, runtime, extensions, topLevel, zip,
 
     // Blocks container for this object.
     const blocks = new Blocks(runtime);
-    // @todo: For now, load all Scratch objects (stage/sprites) as a Sprite.
+    // @todo: For now, load all Boundlo objects (stage/sprites) as a Sprite.
     const sprite = new Sprite(blocks, runtime);
     // Sprite/stage name from JSON.
     if (Object.prototype.hasOwnProperty.call(object, 'objName')) {
@@ -684,7 +684,7 @@ const parseScratchObject = function (object, runtime, extensions, topLevel, zip,
         target.y = object.scratchY;
     }
     if (Object.prototype.hasOwnProperty.call(object, 'direction')) {
-        // Sometimes the direction can be outside of the range: LLK/scratch-gui#5806
+        // Sometimes the direction can be outside of the range: LLK/boundlo-gui#5806
         // wrapClamp it (like we do on RenderedTarget.setDirection)
         target.direction = MathUtil.wrapClamp(object.direction, -179, 180);
     }
@@ -906,7 +906,7 @@ const specMapBlock = function (block) {
  * which block they should attach to.
  * @param {int} commentIndex The comment index for the block to be parsed if it were in a flattened
  * list of all blocks for the target
- * @return {Array.<object|int>} Tuple where first item is the Scratch VM-format block (or null if unsupported object),
+ * @return {Array.<object|int>} Tuple where first item is the Boundlo VM-format block (or null if unsupported object),
  * and second item is the updated comment index (after this block and its children are parsed)
  */
 const parseBlock = function (sb2block, addBroadcastMsg, getVariableId, extensions, parseState, comments, commentIndex) {
@@ -970,7 +970,7 @@ const parseBlock = function (sb2block, addBroadcastMsg, getVariableId, extension
     }
     // Look at the expected arguments in `blockMetadata.argMap.`
     // The basic problem here is to turn positional SB2 arguments into
-    // non-positional named Scratch VM arguments.
+    // non-positional named Boundlo VM arguments.
     for (let i = 0; i < blockMetadata.argMap.length; i++) {
         const expectedArg = blockMetadata.argMap[i];
         const providedArg = sb2block[i + 1]; // (i = 0 is opcode)
@@ -1048,7 +1048,7 @@ const parseBlock = function (sb2block, addBroadcastMsg, getVariableId, extension
                 expectedArg.inputOp === 'math_integer' ||
                 expectedArg.inputOp === 'math_angle') {
                 fieldName = 'NUM';
-                // Fields are given Scratch 2.0 default values if obscured.
+                // Fields are given Boundlo 2.0 default values if obscured.
                 if (shadowObscured) {
                     fieldValue = 10;
                 }
